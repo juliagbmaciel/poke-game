@@ -183,7 +183,7 @@ class Play:
         if self.poke_bot.hp > 0:
             print("YOU LOSE!!")
         else:
-            print("YOU WIN")
+            print("YOU WON")
 
 
 j = Play()
