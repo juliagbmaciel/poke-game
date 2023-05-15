@@ -1,18 +1,18 @@
 
 class Pokemon:
 
-    def __init__(self, name, speed, hp):
-        self.pic = name
+    def __init__(self, name, speed, hp, attack):
+        self.name = name
         self.speed = speed
         self.hp = hp
-
+        self.attack = attack
 
 
 class Grass(Pokemon):
     type = 'Grass'
 
-    def __init__(self, name, speed, hp, user='player'):
-        super(Grass, self).__init__(name, speed, hp)
+    def __init__(self, name, speed, hp, attack, user='player'):
+        super(Grass, self).__init__(name, speed, hp, attack)
         self.user = user
 
     @property
