@@ -1,12 +1,7 @@
 import random
 from tkinter import *
-from tkinter import ttk
 from PIL import ImageTk, Image
 from pokeclass import Grass, Water, Fire
-from time import sleep
-
-
-
 
 janela = Tk()
 
@@ -14,23 +9,26 @@ janela = Tk()
 class Aplicacao():
     def __init__(self):
         self.janela = janela
-        self.bulb = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\bulbasauro.png")
+        self.bot_life = ''
+        self.player_life = ''
+        self.b_life = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\bulbasauro_life.png")
+        self.bulb_life = ImageTk.PhotoImage(self.b_life)
+        self.c_life = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\charmander_life.png")
+        self.charm_life = ImageTk.PhotoImage(self.c_life)
+        self.s_life = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\squirtle_life.png")
+        self.squir_life= ImageTk.PhotoImage(self.s_life)
+        self.bulb = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\bulbasauro.png")
         self.bulb_img = ImageTk.PhotoImage(self.bulb)
-        self.charm = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\charmander.png")
+        self.charm = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\charmander.png")
         self.charm_img = ImageTk.PhotoImage(self.charm)
-        self.squir = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\squirtle.png")
+        self.squir = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\squirtle.png")
         self.squir_img= ImageTk.PhotoImage(self.squir)
         self.tela()
         self.home()
         janela.mainloop()
 
 
-    # def test(self):
-    #     self.pokemons = Grass(self.bulb_img, 45, 45, )
     def tela(self):
-        """
-        cria tela do tkinter
-        """
         self.janela.title('POKEMON')
         self.janela.geometry('700x700')
         self.janela.configure(background='#000')
@@ -39,7 +37,7 @@ class Aplicacao():
         self.janela.minsize(width=700, height=700)
 
     def home(self):
-        self.imghome = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\initial.png")
+        self.imghome = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\initial.png")
         self.imagem_home = ImageTk.PhotoImage(self.imghome)
         self.frame_0 = Label(self.janela, image=self.imagem_home, )
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
@@ -47,11 +45,11 @@ class Aplicacao():
     #
     def botoes(self):
         fonte = ('Inter', 12, 'bold')
-        self.bul = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\mini_bulbasauro.png")
+        self.bul = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\mini_bulbasauro.png")
         self.bul_img = ImageTk.PhotoImage(self.bul)
-        self.squirt = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\mini_squirtle.png")
+        self.squirt = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\mini_squirtle.png")
         self.squirt_img = ImageTk.PhotoImage(self.squirt)
-        self.char = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\mini_char.png")
+        self.char = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\mini_char.png")
         self.char_img = ImageTk.PhotoImage(self.char)
         self.bt_bul = Button(self.frame_0, text='Bulbasaur', image=self.bul_img, compound=LEFT, font=fonte, fg='#78A75A', background='white', relief='flat',command=lambda m="Bulbasaur": self.battle(m))
         self.bt_bul.place(relx=0.10, rely=0.535, relwidth=0.20, relheight=0.07)
@@ -64,30 +62,48 @@ class Aplicacao():
 
     def battle(self, m):
         if m == 'Bulbasaur':
-            self.poke_player = Grass(self.bulb_img, 45, 45, 'player')
+            self.poke_player = Grass(self.bulb_img, 45, 45, {'Razor Leaf': {'type': 'Physical', 'strenght': 10,  'movement': 'throwing blades at the opponent...'},
+                'Stun Spore': {'type': 'Status', 'strenght': 10, 'movement': 'spreading cloud of numbing powder...'},
+                'Absorb': {'type': 'Physical', 'strenght': 10, 'movement': 'draining the opponents ...'}}, 'player')
+            self.player_life = self.bulb_life
         elif m == 'Squirtle':
-            self.poke_player = Water(self.squir_img, 43, 44, 'player')
+            self.player_life = self.squir_life
+            self.poke_player = Water(self.squir_img, 43, 44, {'Rain Dance': {'type': 'Status', 'strenght': 10, 'movement': 'Summoning rain...'},
+                'Bubble Beam': {'type': 'Status', 'strenght': 10, 'movement': 'Throwing bubble spray at the opponent...'},
+                'Razor Shell': {'type': 'Status', 'strenght': 10, 'movement': 'Slashing opponent with shells...'}}, 'player')
         elif m == 'Charmander':
-            self.poke_player = Fire(self.charm_img, 65, 39, 'player')
+            self.player_life = self.charm_life
+            self.poke_player = Fire(self.charm_img, 65, 39, {'Blaze Kick': {'type': 'Physical', 'strenght': 10, 'movement': 'kicking the opponent...'},
+                'Fire Blast': {'type': 'Physical', 'strenght': 10, 'movement': 'Attacking opponent with an intense blast...'},
+                'Sunny Day': {'type': 'Status', 'strenght': 10, 'movement': 'Intensifying the sun...'}}, 'player')
         poke1, poke2, poke3 = self.bulb_img, self.charm_img, self.squir_img
         lista_pokes = [poke1, poke2, poke3]
         self.poke_img_bot = random.choice(lista_pokes)
         if self.poke_img_bot == poke1:
-            self.poke_bot = Grass(poke1, 45, 45, 'bot')
+            self.poke_bot = Grass(self.bulb_img, 45, 45, {'Razor Leaf': {'type': 'Physical', 'strenght': 10,  'movement': 'throwing blades at the opponent...'},
+                'Stun Spore': {'type': 'Status', 'strenght': 10, 'movement': 'spreading cloud of numbing powder...'},
+                'Absorb': {'type': 'Physical', 'strenght': 10, 'movement': 'draining the opponents ...'}}, 'bot')
+            self.bot_life = self.bulb_life
         elif self.poke_img_bot == poke2:
-            self.poke_bot = Fire(poke2, 65, 39, 'bot')
+            self.bot_life = self.charm_life
+            self.poke_bot = Fire(self.charm_img, 65, 39, {'Blaze Kick': {'type': 'Physical', 'strenght': 10, 'movement': 'kicking the opponent...'},
+                'Fire Blast': {'type': 'Physical', 'strenght': 10, 'movement': 'Attacking opponent with an intense blast...'},
+                'Sunny Day': {'type': 'Status', 'strenght': 10, 'movement': 'Intensifying the sun...'}}, 'bot')
         else:
-            self.poke_bot = Water(poke3, 43, 44, 'bot')
-        self.imgfight = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\fight.png")
+            self.bot_life = self.squir_life
+            self.poke_bot = Water(self.squir_img, 43, 44, {'Rain Dance': {'type': 'Status', 'strenght': 10, 'movement': 'Summoning rain...'},
+                'Bubble Beam': {'type': 'Status', 'strenght': 10, 'movement': 'Throwing bubble spray at the opponent...'},
+                'Razor Shell': {'type': 'Status', 'strenght': 10, 'movement': 'Slashing opponent with shells...'}}, 'bot')
+        self.imgfight = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\fight.png")
         self.imagem_fight = ImageTk.PhotoImage(self.imgfight)
         self.frame_0 = Label(self.janela, image=self.imagem_fight)
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
         self.label_bulb = Label(self.frame_0, image=self.poke_player.name)
-        self.label_bulb.place(relx=0.13, rely=0.30, relwidth=0.25, relheight=0.25)
+        self.label_bulb.place(relx=0.13, rely=0.32, relwidth=0.25, relheight=0.25)
         self.label_bot = Label(self.frame_0, image=self.poke_img_bot)
         self.label_bot.place(relx=0.62, rely=0.32, relwidth=0.25, relheight=0.25)
         if self.poke_player.speed == self.poke_bot.speed:
-            yn = ['p', 'b']
+            yn = ['p']
             chose = random.choice(yn)
             if chose == 'p':
                 self.janela.after(3000, self.you_start)
@@ -98,26 +114,82 @@ class Aplicacao():
         elif self.poke_player.speed > self.poke_bot.speed:
             self.janela.after(3000, self.you_start)
 
-
     def bot_start(self):
-        self.imgfight = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\op_start.png")
+        self.imgfight = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\op_start.png")
         self.imagem_fight = ImageTk.PhotoImage(self.imgfight)
         self.frame_0 = Label(self.janela, image=self.imagem_fight)
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
         self.label_bulb = Label(self.frame_0, image=self.poke_bot.name)
         self.label_bulb.place(relx=0.38, rely=0.30, relwidth=0.25, relheight=0.25)
+        print(self.poke_player.hp)
+        self.show_players(self.poke_player.hp, self.poke_bot.hp)
+
+    def show_players(self, hp_player, hp_bot):
+        fonte = ('arial', 16, 'bold')
+        label_life_bot = Label(self.frame_0, image=self.bot_life)
+        label_life_bot.place(relx=0.90, rely=0.06, relwidth=0.06, relheight=0.06)
+        label_life_player = Label(self.frame_0, image=self.player_life)
+        label_life_player.place(relx=0.22, rely=0.06, relwidth=0.06, relheight=0.06)
+        label_hp= Label(self.frame_0, text=hp_player, background='#000', fg='white', font= fonte)
+        label_hp.place(relx=0.15, rely=0.12, relwidth=0.04, relheight=0.04)
+        label_hp_bot = Label(self.frame_0, text=hp_bot, background='#000', fg='white', font= fonte)
+        label_hp_bot.place(relx=0.84, rely=0.115, relwidth=0.04, relheight=0.04, )
+
     def you_start(self):
-        self.imgfight = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\you_start.png")
+        self.imgfight = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\you_start.png")
         self.imagem_fight = ImageTk.PhotoImage(self.imgfight)
         self.frame_0 = Label(self.janela, image=self.imagem_fight)
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
         self.label_bulb = Label(self.frame_0, image=self.poke_player.name)
         self.label_bulb.place(relx=0.38, rely=0.30, relwidth=0.25, relheight=0.25)
+        self.show_players(self.poke_player.hp, self.poke_bot.hp)
+        self.janela.after(3000, self.choose_attack_player)
+
+    def bot_choose_attack(self):
+        attack = []
+        attacks = self.poke_bot.attack
+        for attackk in attacks:
+            attack.append(attackk)
+        attack_bot = random.choice(attack)
+        self.damage(attack_bot, 'player')
+
+    def choose_attack_player(self):
+        attack = []
+        attacks = self.poke_player.attack
+        for attackk in attacks:
+            attack.append(attackk)
+        fonte = ('arial', 14, 'bold')
+        chose = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\chose_attack.png")
+        self.chose_attack = ImageTk.PhotoImage(chose)
+        self.frame_0 = Label(self.janela, image=self.chose_attack)
+        self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
+        self.show_players(self.poke_player.hp, self.poke_bot.hp)
+        self.at1= Button(self.frame_0, text=attack[0], font=fonte, fg='black', background='#FEF339', relief='flat', command=lambda m=attack[0]: self.damage(m, 'bot'))
+        self.at1.place(relx=0.14, rely=0.57, relwidth=0.16, relheight=0.07)
+        self.at2 = Button(self.frame_0, text=attack[1], font=fonte, fg='black', background='#FEF339', relief='flat', command=lambda m=attack[1]: self.damage(m, 'bot'))
+        self.at2.place(relx=0.43, rely=0.57, relwidth=0.18, relheight=0.07)
+        self.at3 = Button(self.frame_0, text=attack[2], font=fonte, fg='black', background='#FEF339', relief='flat', command=lambda m=attack[1]: self.damage(m, 'bot'))
+        self.at3.place(relx=0.73, rely=0.57, relwidth=0.16, relheight=0.07)
+
+    def damage(self, attack_choice, next_player):
+        if self.poke_player.advantages(self.poke_bot.type) == 'same':
+            for attack in self.poke_player.attacks:
+                print(attack)
+        elif self.poke_player.advantages(self.poke_bot.type):
+            dic = (self.poke_player.attacks)
+            power = dic[f'{attack_choice}']['strenght'] + 5
+            self.poke_bot.hp -= power
+        elif not self.poke_player.advantages(self.poke_bot.type):
+            for attack in self.poke_player.attacks:
+                print(attack)
+
+
+
 
     def poke_infos(self):
-        self.seta = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\seta.png")
+        self.seta = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\seta.png")
         self.seta_img = ImageTk.PhotoImage(self.seta)
-        self.imagem = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\pokeinfo.png")
+        self.imagem = Image.open(r"C:\Users\ct67ca\Desktop\poke-game-main\img\pokeinfo.png")
         self.imagem_tk = ImageTk.PhotoImage(self.imagem)
         frame = Frame(self.janela, background='#000')
         frame.place(relheight=0.9, relwidth=1.0, relx=0.0, rely=0.02)
@@ -125,140 +197,6 @@ class Aplicacao():
         self.label_imagem.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
         self.bt_back = Button(self.label_imagem, fg='#F47932', image=self.seta_img, background='white', relief='flat', command=self.home)
         self.bt_back.place(relx=0.895, rely=0.855, relwidth=0.05, relheight=0.045)
-
-
-
-
-    #
-    #Button(root, text = 'Click Me !', image = photoimage,
-                    # compound = LEFT).pack(side = TOP)
-    # def home(self):78A75A
-    # 52A3A9
-    # F47932
-    #     """
-    #     exibe aba(tela) "home" do tkinter
-    #     """
-    #     self.cria_navbar()
-    #     self.imagem = Image.open("home.png")
-    #     self.imagem_tk = ImageTk.PhotoImage(self.imagem)
-    #     frame = Frame(self.janela, background='#000')
-    #     frame.place(relheight=0.9, relwidth=1.0, relx=0.0, rely=0.1)
-    #     self.label_imagem = Label(frame, image=self.imagem_tk)
-    #     self.label_imagem.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
-    #
-    # def command_brand(self):
-    #     """
-    #     exibe tela "brands" quando o usuario clicar no botão,
-    #     mostra tvs de acordo com a marca
-    #     """
-    #     self.tvsframe = Frame(self.janela, background='#f0f0f0')
-    #     self.tvsframe.place(relheight=0.9, relwidth=1.0, relx=0.0, rely=0.09)
-    #     self.search = Image.open("search.png")
-    #     self.search_tk = ImageTk.PhotoImage(self.search)
-    #     label = Label(self.tvsframe, image=self.search_tk)
-    #     label.place(relx=0, relwidth=1.0, relheight=0.1)
-    #     self.frame_combo = Frame(label, background='#000')
-    #     self.frame_combo.place(rely=0.31, relx=0.47, relheight=0.4, relwidth=0.3)
-    #     self.combobox = ttk.Combobox(self.frame_combo,
-    #                                  values=['Samsung', 'LG', 'TCL', 'Multilaser'], state="readonly", width=21, font=('sans-serif', 12), background='#fff')
-    #     self.combobox.place( width=0.7)
-    #     self.combobox.grid(column=0, row=1)
-    #     self.combobox.current(1)
-    #     self.bt = Image.open("lupa.png")
-    #     self.bt_tk = ImageTk.PhotoImage(self.bt)
-    #     self.btSearch = Button(label, image=self.bt_tk, relief='flat', background='#0087FD', command=self.tabela)
-    #     self.btSearch.place(rely=0.21, relx=0.8, relheight=0.5, relwidth=0.04)
-    #     self.btvalues = Button(self.tvsframe, text='Pegar valores em tempo real', font=('Inter', 8, 'bold'), fg='white', relief='groove', background='#0087FD', command=self.webscrapp_marcas)
-    #     self.btvalues.place(rely=0.12, relx=0.05, relheight=0.05, relwidth=0.3)
-    #
-    # def webscrapp_marcas(self):
-    #     """
-    #     Inicia webscrap das marcas das tvs caso solicitado
-    #     """
-    #     j = Marcas()
-    #
-    # def webscrapp_tvs(self):
-    #     """
-    #     Inicia webscrap das tvs caso solicitado
-    #     """
-    #     j = Tvs()
-    #
-    # def tabela(self):
-    #     """
-    #     Cria tabela de acordo com as marcas
-    #     """
-    #     self.lista_frame2(True)
-    #     self.selecionar_opcao()
-    #
-    # def command_tvs(self):
-    #     """
-    #     cria aba(tela) quando o botão tvs é clicado, feito pra mostrar as 10 primeiras tvs do site
-    #     """
-    #     self.cria_navbar()
-    #     self.alltvsframe = Frame(self.janela, background='#f0f0f0')
-    #     self.alltvsframe.place(relheight=0.9, relwidth=1.0, relx=0.0, rely=0.1)
-    #     self.btvalues_tvs = Button(self.alltvsframe, text='Pegar valores em tempo real', font=('Inter', 8, 'bold'), fg='white', relief='groove', background='#0087FD', command=self.webscrapp_tvs)
-    #     self.btvalues_tvs.place(rely=0.2, relx=0.16, relheight=0.05, relwidth=0.3)
-    #     self.btatualiza = Button(self.alltvsframe, text='Atualizar', font=('Inter', 8, 'bold'), fg='white', relief='groove', background='#0087FD', command=self.tabela_2)
-    #     self.btatualiza.place(rely=0.2, relx=0.05, relheight=0.05, relwidth=0.1)
-    #     self.lista_frame2(False)
-    #     self.selecionar_tvs()
-    #
-    # def tabela_2(self):
-    #     """
-    #     cria tabela das 10 primeiras tvs mostradas no site
-    #     """
-    #     self.lista_frame2(False)
-    #     self.selecionar_tvs()
-    #
-    # def lista_frame2(self, s):
-    #     """
-    #     cria tabela de acordo com a variavel enviada como parametro, se s for true, entao a tabela é de acordo com marca,
-    #     se s for false, então a tabela mostra todas as 10 primeiras tvs
-    #     :param s: valida qual tabela será criada, valores true ou false
-    #     """
-    #     if s:
-    #         self.listatvs = ttk.Treeview(self.tvsframe, height=3,
-    #                                      columns=('col1',
-    #                                               'col2',
-    #                                               'col3'))
-    #     else:
-    #         self.listatvs = ttk.Treeview(self.alltvsframe, height=3,
-    #                                      columns=('col1',
-    #                                               'col2',
-    #                                               'col3'))
-    #     self.listatvs.heading('#0', text='')
-    #     self.listatvs.heading('#1', text='NOME')
-    #     self.listatvs.heading('#2', text='PREÇO')
-    #
-    #     self.listatvs.column('#0', width=5)
-    #     self.listatvs.column('#1', width=530)
-    #     self.listatvs.column('#2', width=80)
-    #
-    #     self.listatvs.place(rely=0.3, relx=0.03,
-    #                         relwidth=0.93, relheight=0.4)
-    #
-    # def selecionar_opcao(self):
-    #     """
-    #     Insere dados do banco na tabela, de acordo com a marca escolhida
-    #     """
-    #     self.brand = self.combobox.get()
-    #     print(self.brand)
-    #     self.listatvs.delete(*self.listatvs.get_children())
-    #     cursor.execute(f"Select nome, preco from {self.brand}")
-    #     linhas = cursor.fetchall()
-    #     for i in linhas:
-    #         self.listatvs.insert(parent='', index=0, values=i)
-    #
-    # def selecionar_tvs(self):
-    #     """
-    #     Insere dados do banco na tabela, das 10 primeiras tvs do site
-    #     """
-    #     self.listatvs.delete(*self.listatvs.get_children())
-    #     cursor.execute(f"Select nome, preco from tvs")
-    #     linhas = cursor.fetchall()
-    #     for i in linhas:
-    #         self.listatvs.insert(parent='', index=0, values=i)
 
 
 jan = Aplicacao()
