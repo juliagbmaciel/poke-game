@@ -9,9 +9,14 @@ janela = Tk()
 
 class Aplicacao():
     def __init__(self):
+        self.quadros = []
         self.janela = janela
         self.bot_life = ''
         self.player_life = ''
+        self.lose= Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\lose.png")
+        self.lose_img= ImageTk.PhotoImage(self.lose)
+        self.won= Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\won.png")
+        self.won_img= ImageTk.PhotoImage(self.won)
         self.b_life = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\bulbasauro_life.png")
         self.bulb_life = ImageTk.PhotoImage(self.b_life)
         self.c_life = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\charmander_life.png")
@@ -29,6 +34,7 @@ class Aplicacao():
 
         janela.mainloop()
 
+
     def song(self):
         pygame.mixer.init()
         pygame.mixer.music.load(r"C:/Users/47829927855/Desktop/poke-game-main/song/pokesong.wav")
@@ -38,6 +44,7 @@ class Aplicacao():
         self.janela.title('POKEMON')
         self.janela.geometry('700x700')
         self.janela.configure(background='#000')
+        self.janela.iconbitmap(r'C:\Users\47829927855\Desktop\poke-game-main\img\pokeball.ico')
         self.janela.resizable(True, True)
         self.janela.maxsize(width=700, height=700)
         self.janela.minsize(width=700, height=700)
@@ -127,10 +134,14 @@ class Aplicacao():
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
         self.label_bulb = Label(self.frame_0, image=self.poke_bot.name)
         self.label_bulb.place(relx=0.38, rely=0.30, relwidth=0.25, relheight=0.25)
-        self.show_players(self.poke_player.hp, self.poke_bot.hp)
+        self.show_hp(self.poke_player.hp, self.poke_bot.hp)
         self.janela.after(3000, self.attack_bot)
 
-    def show_players(self, hp_player, hp_bot):
+    def show_hp(self, hp_player, hp_bot):
+        if self.poke_player.hp < 0:
+            hp_player = 0
+        elif self.poke_bot.hp < 0:
+            hp_bot = 0
         fonte = ('arial', 16, 'bold')
         label_life_bot = Label(self.frame_0, image=self.bot_life)
         label_life_bot.place(relx=0.90, rely=0.06, relwidth=0.06, relheight=0.06)
@@ -148,29 +159,60 @@ class Aplicacao():
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
         self.label_bulb = Label(self.frame_0, image=self.poke_player.name)
         self.label_bulb.place(relx=0.38, rely=0.30, relwidth=0.25, relheight=0.25)
-        self.show_players(self.poke_player.hp, self.poke_bot.hp)
+        self.show_hp(self.poke_player.hp, self.poke_bot.hp)
         self.janela.after(3000, self.choose_attack_player)
 
     def attack_bot(self):
+        self.put_attack_bot()
+        self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+        self.fonte = ('arial', 16, 'bold')
+        attack = []
+        self.attacks = self.poke_bot.attack
+        for i in self.attacks:
+            attack.append(i)
+        self.attaque_bot = random.choice(attack)
+        self.next, self.dano = self.damage(self.attaque_bot, self.poke_bot, self.poke_player)
+        if self.next == 'miss':
+            self.show_missed('b')
+        elif self.next == 'crit':
+            self.att1 = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\critical.png")
+            self.att1_img = ImageTk.PhotoImage(self.att1)
+            self.frame_0 = Label(self.janela, image=self.att1_img)
+            self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
+            self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+            self.janela.after(3000, self.put_attack_bot)
+            self.janela.after(3000, self.put_1st_label)
+            self.janela.after(3000, self.put_poke_bot)
+            self.janela.after(3000, self.show_damage_bot)
+        else:
+            self.put_1st_label()
+            self.put_poke_bot()
+            self.janela.after(3000, self.show_damage_bot)
+
+    def put_attack_bot(self):
         self.att1 = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\op_attack.png")
         self.att1_img = ImageTk.PhotoImage(self.att1)
         self.frame_0 = Label(self.janela, image=self.att1_img)
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
-        self.show_players(self.poke_player.hp, self.poke_bot.hp)
-        self.fonte = ('arial', 16, 'bold')
-        attack = []
-        self.attacks = self.poke_bot.attack
-        for attackk in self.attacks:
-            attack.append(attackk)
-        self.attaque_bot = random.choice(attack)
-        self.next, self.dano = self.damage(self.attaque_bot, self.poke_bot, self.poke_player)
-        self.put_1st_label()
-        self.put_poke_bot()
-        self.janela.after(3000, self.show_damage_bot)
 
+    def put_attack_player(self):
+        self.att1 = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\pl_attack.png")
+        self.att1_img = ImageTk.PhotoImage(self.att1)
+        self.frame_0 = Label(self.janela, image=self.att1_img)
+        self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
+    def show_missed(self, next):
+        self.miss = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\missed.png")
+        self.missed = ImageTk.PhotoImage(self.miss)
+        self.frame_0 = Label(self.janela, image=self.missed)
+        self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
+        self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+        if next == 'a':
+            self.janela.after(3000, self.attack_bot)
+        else:
+            self.janela.after(3000, self.choose_attack_player)
     def put_1st_label(self):
         lab = Label(self.frame_0, text=self.attacks[f'{self.attaque_bot}']['movement'], font=self.fonte, fg='white', background='#727373')
-        lab.place(relx=0.12, rely=0.30, relwidth=0.38, relheight=0.08)
+        lab.place(relx=0.12, rely=0.29, relwidth=0.389, relheight=0.089)
     def put_poke_bot(self):
         self.put_1st_label()
         lab_op = Label(self.frame_0, image=self.poke_bot.name)
@@ -181,8 +223,12 @@ class Aplicacao():
         damage = f"Damage: {self.dano}"
         lab_damage = Label(self.frame_0, text=damage, font=self.fonte, background='#727373', fg='white')
         lab_damage.place(relx=0.34, rely=0.55, relwidth=0.20, relheight=0.05)
-        self.show_players(self.poke_player.hp, self.poke_bot.hp)
-        self.janela.after(3000, self.choose_attack_player)
+        if self.poke_player.hp < 0:
+            self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+            self.janela.after(3000, self.show_lose)
+        else:
+            self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+            self.janela.after(3000, self.choose_attack_player)
 
     def choose_attack_player(self):
         attack = []
@@ -194,54 +240,77 @@ class Aplicacao():
         self.chose_attack = ImageTk.PhotoImage(chose)
         self.frame_0 = Label(self.janela, image=self.chose_attack)
         self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
-        self.show_players(self.poke_player.hp, self.poke_bot.hp)
+        self.show_hp(self.poke_player.hp, self.poke_bot.hp)
         self.at1= Button(self.frame_0, text=attack[0], font=fonte, fg='black', background='#FEF339', relief='flat', command=lambda m=attack[0]: self.attack_player(m))
         self.at1.place(relx=0.14, rely=0.57, relwidth=0.16, relheight=0.07)
         self.at2 = Button(self.frame_0, text=attack[1], font=fonte, fg='black', background='#FEF339', relief='flat', command=lambda m=attack[1]: self.attack_player(m))
         self.at2.place(relx=0.43, rely=0.57, relwidth=0.18, relheight=0.07)
-        self.at3 = Button(self.frame_0, text=attack[2], font=fonte, fg='black', background='#FEF339', relief='flat', command=lambda m=attack[1]: self.attack_player(m))
+        self.at3 = Button(self.frame_0, text=attack[2], font=fonte, fg='black', background='#FEF339', relief='flat', command=lambda m=attack[2]: self.attack_player(m))
         self.at3.place(relx=0.73, rely=0.57, relwidth=0.16, relheight=0.07)
 
     def damage(self, attack_choice, player, next_player):
         self.attack_choice = attack_choice
-        if self.poke_player.advantages(self.poke_bot.type) == 'same':
+        cri = [True, False, True, False]
+        miss = [True, True, False, False, False]
+        missed = random.choice(miss)
+        crit = random.choice(cri)
+        if missed:
+            return 'miss', 0
+        if crit and not missed:
+            dic = (player.attacks)
+            power = dic[f'{self.attack_choice}']['strenght']+10
+            next_player.hp -= power
+            return 'crit', power
+        elif self.poke_player.advantages(self.poke_bot.type) == 'same' and not missed:
             dic = (player.attacks)
             power = dic[f'{self.attack_choice}']['strenght']
             next_player.hp -= power
-            self.show_players(self.poke_player.hp, self.poke_bot.hp)
             return next_player, power
-        elif self.poke_player.advantages(self.poke_bot.type):
+        elif player.advantages(next_player.type) and not missed:
             dic = (player.attacks)
             power = dic[f'{self.attack_choice}']['strenght'] + 5
             next_player.hp -= power
-            self.show_players(self.poke_player.hp, self.poke_bot.hp)
             return next_player, power
-        elif not self.poke_player.advantages(self.poke_bot.type):
+        elif not player.advantages(next_player.type) and not missed:
             dic = (player.attacks)
             power = dic[f'{self.attack_choice}']['strenght'] - 3
             next_player.hp -= power
-            self.show_players(self.poke_player.hp, self.poke_bot.hp)
             return next_player, power
 
     def attack_player(self, attack):
         print(attack)
+        self.put_attack_player()
+        self.show_hp(self.poke_player.hp, self.poke_bot.hp)
         self.prox, self.dano_player = self.damage(attack, self.poke_player, self.poke_bot)
-        self.att1 = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\pl_attack.png")
-        self.att1_img = ImageTk.PhotoImage(self.att1)
-        self.frame_0 = Label(self.janela, image=self.att1_img)
-        self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
-        self.show_players(self.poke_player.hp, self.poke_bot.hp)
-        self.put_1st_label_player()
-        self.put_poke_player()
-        self.janela.after(3000, self.show_damage_player)
+        if self.prox == 'miss':
+            self.show_missed('a')
+        elif self.prox == 'crit':
+            self.att1 = Image.open(r"C:\Users\47829927855\Desktop\poke-game-main\img\critical.png")
+            self.att1_img = ImageTk.PhotoImage(self.att1)
+            self.frame_0 = Label(self.janela, image=self.att1_img)
+            self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
+            self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+            self.janela.after(3000, self.put_attack_player)
+            self.janela.after(3000, self.put_1st_label_player)
+            self.janela.after(3000, self.put_poke_player)
+            self.janela.after(3000, self.show_damage_player)
+        else:
+            self.put_1st_label_player()
+            self.put_poke_player()
+            self.janela.after(3000, self.show_damage_player)
+
     def show_damage_player(self):
         fonte = ('arial', 16, 'bold')
         self.put_poke_player()
         damage = f"Damage: {self.dano_player}"
         lab_damage = Label(self.frame_0, text=damage, font=fonte, background='#727373', fg='white')
         lab_damage.place(relx=0.46, rely=0.86, relwidth=0.20, relheight=0.05)
-        self.show_players(self.poke_player.hp, self.poke_bot.hp)
-        self.janela.after(3000, self.attack_bot)
+        if self.poke_bot.hp < 0:
+            self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+            self.janela.after(3000, self.show_won)
+        else:
+            self.show_hp(self.poke_player.hp, self.poke_bot.hp)
+            self.janela.after(3000, self.attack_bot)
     def put_1st_label_player(self):
         fonte = ('arial', 16, 'bold')
         lab = Label(self.frame_0, text=self.poke_player.attacks[f'{self.attack_choice}']['movement'], font=fonte, fg='white', background='#727373')
@@ -261,6 +330,20 @@ class Aplicacao():
         self.label_imagem.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
         self.bt_back = Button(self.label_imagem, fg='#F47932', image=self.seta_img, background='white', relief='flat', command=self.home)
         self.bt_back.place(relx=0.895, rely=0.855, relwidth=0.05, relheight=0.045)
+
+    def show_won(self):
+        fonte = ('Arial', 12, 'bold')
+        self.frame_0 = Label(self.janela, image=self.won_img)
+        self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
+        self.btpa = Button(self.frame_0, text="Play again", fg='black', font = fonte, background='#FEF339', relief='flat', command=self.home)
+        self.btpa.place(relx=0.46, rely=0.71, relwidth=0.15, relheight=0.045)
+
+    def show_lose(self):
+        fonte = ('Arial', 12, 'bold')
+        self.frame_0 = Label(self.janela, image=self.lose_img)
+        self.frame_0.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
+        self.btpa = Button(self.frame_0, text="Play again", fg='black', font = fonte, background='#FEF339', relief='flat', command=self.home)
+        self.btpa.place(relx=0.45, rely=0.75, relwidth=0.15, relheight=0.045)
 
 
 jan = Aplicacao()
